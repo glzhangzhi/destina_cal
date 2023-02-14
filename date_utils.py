@@ -17,10 +17,7 @@ def date_differ(jd1, jd2):
     return math.floor(jd1 + 8 / 24 + 0.5) - math.floor(jd2 + 8 / 24 + 0.5)
 
 def date_compare(jd1, jd2):
-    if date_differ(jd1, jd2) >= 0:
-        return True
-    else:
-        return False 
+    return date_differ(jd1, jd2) >= 0
 
 def find_dzs(year):
     if year == 1:
