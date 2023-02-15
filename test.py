@@ -2,7 +2,7 @@ from skyfield import almanac
 from skyfield import almanac_east_asia as almanac_ea
 from skyfield import api
 
-from konstant import dipan_tiangan, jiuxingzhudi, yangjieqi, yinjieqi
+from konstant import dipan_tiangan, bashen, jiuxingzhudi, yangjieqi, yinjieqi
 
 
 def sanyuan(gz):
@@ -163,4 +163,32 @@ class Jiuxing:
     def jiuxing2index(self, jx):
         return self.jiuxing.index(jx)
     
+
+class Bashen:
     
+    def __init__(self, zhifujiugong, ju):
+        self.zhifujiugong = zhifujiugong
+        self.ju = ju
+        self._make()
+    
+    def _make(self):
+        if self.ju == '阳':
+            bashen_shunxu = bashen
+        else:
+            bashen_shunxu = bashen[::-1]
+        jiugongshunxu = [0, 7, 2, 3, 8, 1, 6, 5]
+        a = jiugongshunxu.index(self.zhifujiugong)
+        new_jiugongshunxu = jiugongshunxu[a:] + jiugongshunxu[:a]
+        self.bashen = [1] * 9
+        self.bashen[4] = '  '
+        for i in range(8):
+            self.bashen[new_jiugongshunxu[i]] = bashen_shunxu[i]
+    
+    def __str__(self):
+        '''显示八神九宫'''
+        return f'''     
+        八神九宫
+        {self.bashen[3]} {self.bashen[8]} {self.bashen[1]}
+        {self.bashen[2]} {self.bashen[4]} {self.bashen[6]}
+        {self.bashen[7]} {self.bashen[0]} {self.bashen[5]}
+        '''

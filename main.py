@@ -1,8 +1,8 @@
 
-from test import Dipan, get_last_jieqi, Jiuxing, sanyuan, wuxing_sheng_ke, yinyangju
+from test import Dipan, Bashen, get_last_jieqi, Jiuxing, sanyuan, wuxing_sheng_ke, yinyangju
 
 from date_utils import calculate_gan_zhi
-from konstant import dipan_tiangan, jiaxun, jushu, tiangan2wuxing, yuefen2wuxing, jiuxingzhudi, gz
+from konstant import dipan_tiangan, jiaxun, bashen, jushu, tiangan2wuxing, yuefen2wuxing, jiuxingzhudi, gz
 
 # 输入日期和时间
 date = '2023-2-13 20:59'
@@ -73,3 +73,6 @@ print('值符所在九宫对应的九星', zhifujiuxing)
 jiuxing = Jiuxing(zhifujiuxing, sgz, dipan)
 print(jiuxing)
 
+# 开始排八神盘
+bs = Bashen(zhifujiugong, ju)
+print(bs)
