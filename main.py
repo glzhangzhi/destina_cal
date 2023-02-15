@@ -49,6 +49,8 @@ print(f'日月凶吉: {wuxing_sheng_ke(rgwuxing, ywuxing)}')
 # 计算日干五行和日干所在地盘九宫位置五行的生克关系
 print(f'地盘凶吉: {wuxing_sheng_ke(rgwuxing, jiugongwuxing)}')
 
+print('#########################')
+
 # 查询日干对应的九星驻地
 riganjiuxing = dipan.get_jiuxing_zhudi(rg)
 print('日干对应的九星驻地', riganjiuxing)
@@ -73,6 +75,11 @@ print('值符所在九宫对应的九星', zhifujiuxing)
 jiuxing = Jiuxing(zhifujiuxing, sgz, dipan)
 print(jiuxing)
 
+print('#########################')
+
 # 开始排八神盘
 bs = Bashen(zhifujiugong, ju)
 print(bs)
+
+print('#########################')
+
