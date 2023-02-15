@@ -2,133 +2,12 @@ from skyfield import almanac
 from skyfield import almanac_east_asia as almanac_ea
 from skyfield import api
 
-from date_utils import gz
+from konstant import dipan_tiangan, yangjieqi, yinjieqi
 
-jushu = {
-    '冬至':{
-        '上元':1,
-        '中元':7,
-        '下元':4
-    },
-    '小寒':{
-        '上元':2,
-        '中元':8,
-        '下元':5
-    },
-    '大寒':{
-        '上元':3,
-        '中元':9,
-        '下元':6
-    },
-    '立春':{
-        '上元':8,
-        '中元':5,
-        '下元':2
-    },
-    '雨水':{
-        '上元':9,
-        '中元':6,
-        '下元':3
-    },
-    '惊蛰':{
-        '上元':1,
-        '中元':7,
-        '下元':4
-    },
-    '春分':{
-        '上元':3,
-        '中元':9,
-        '下元':6
-    },
-    '清明':{
-        '上元':4,
-        '中元':1,
-        '下元':7
-    },
-    '谷雨':{
-        '上元':5,
-        '中元':2,
-        '下元':8
-    },
-    '立夏':{
-        '上元':4,
-        '中元':1,
-        '下元':7
-    },
-    '小满':{
-        '上元':5,
-        '中元':2,
-        '下元':8
-    },
-    '芒种':{
-        '上元':6,
-        '中元':3,
-        '下元':9
-    },
-    '夏至':{
-        '上元':9,
-        '中元':3,
-        '下元':6
-    },
-    '小暑':{
-        '上元':8,
-        '中元':2,
-        '下元':5
-    },
-    '大暑':{
-        '上元':7,
-        '中元':1,
-        '下元':4
-    },
-    '立秋':{
-        '上元':2,
-        '中元':5,
-        '下元':8
-    },
-    '处暑':{
-        '上元':1,
-        '中元':4,
-        '下元':7
-    },
-    '白露':{
-        '上元':9,
-        '中元':3,
-        '下元':6
-    },
-    '秋分':{
-        '上元':7,
-        '中元':1,
-        '下元':4
-    },
-    '寒霜':{
-        '上元':6,
-        '中元':9,
-        '下元':3
-    },
-    '霜降':{
-        '上元':5,
-        '中元':8,
-        '下元':2
-    },
-    '立冬':{
-        '上元':6,
-        '中元':9,
-        '下元':3
-    },
-    '小雪':{
-        '上元':5,
-        '中元':8,
-        '下元':2
-    },
-    '大雪':{
-        '上元':4,
-        '中元':7,
-        '下元':1
-    },
-}
 
-def sanyuan(rgz):
-    gz_index = gz.index(rgz) + 1
+def sanyuan(gz):
+    '''由干支计算上中下元'''
+    gz_index = gz.index(gz) + 1
     i = gz_index % 15
     if int(i / 5) == 0:
         return '上元'
@@ -138,7 +17,7 @@ def sanyuan(rgz):
         return '下元'
 
 def get_last_jieqi(date):
-    
+    '''由日期得上一个节气'''
     nian, yue, ri = date.split('-')
     nian, yue, ri = int(nian), int(yue), int(ri)
 
@@ -155,48 +34,8 @@ def get_last_jieqi(date):
     
     return jieqis[-1]
 
-dipan_tiangan = '戊 己 庚 辛 壬 癸 丁 丙 乙'.split(' ')
-
-tiangan2wuxing = {'甲':'木',
-                  '乙':'木',
-                  '丙':'火',
-                  '丁':'火',
-                  '戊':'土',
-                  '己':'土',
-                  '庚':'金',
-                  '辛':'金',
-                  '壬':'水',
-                  '癸':'水',
-                  }
-
-yuefen2wuxing = {
-    '正月':'木',
-    '二月':'木',
-    '三月':'土',
-    '四月':'火',
-    '五月':'火',
-    '六月':'土',
-    '七月':'金',
-    '八月':'金',
-    '九月':'土',
-    '十月':'水',
-    '十一月':'水',
-    '十二月':'土'
-}
-
-def get_jiugong_wuxing(i):
-    if i in [1, 4, 7]:
-        return '土'
-    elif i in [8]:
-        return '火'
-    elif i in [0]:
-        return '水'
-    elif i in [5, 6]:
-        return '金'
-    elif i in [2, 3]:
-        return '木'
-
 def wuxing_sheng_ke(zhu, ke):
+    '''计算五行生克关系'''
     wuxing = '金 水 木 火 土'.split(' ')
     index_zhu = wuxing.index(zhu)
     index_ke = wuxing.index(ke)
@@ -211,3 +50,73 @@ def wuxing_sheng_ke(zhu, ke):
         return '囚'
     elif shengke == -4 or shengke == 1:
         return '死'
+
+def yinyangju(last_jieqi):
+    '''根据上一个节气判断是阳局还是阴局'''
+    if last_jieqi in yangjieqi:
+        return '阳'
+    elif last_jieqi in yinjieqi:
+        return '阴'
+    else:
+        raise ValueError
+
+class Dipan:
+    
+    def __init__(self, ju, shu):
+        self.ju = ju
+        self.shu = shu
+        self._make()
+    
+    def _make(self):
+        '''根据阴阳局和局数创建地盘九宫'''
+        # 初始化地盘九宫矩阵
+        self.dipan = [1] * 9
+
+        next = self.shu
+        for i in range(9):
+            
+            # 按顺序排盘
+            self.dipan[next - 1] = dipan_tiangan[i]
+            
+            # 阳顺阴逆
+            if self.ju == '阳':
+                next += 1
+            else:
+                next -= 1
+            
+            # 收尾相接
+            if next > 9:
+                next = 1
+            elif next < 1:
+                next = 9
+
+    def __str__(self):
+        '''显示地盘九宫'''
+        return f'''     
+        {self.dipan[3]} {self.dipan[8]} {self.dipan[1]}
+        {self.dipan[2]} {self.dipan[4]} {self.dipan[6]}
+        {self.dipan[7]} {self.dipan[0]} {self.dipan[5]}
+        '''
+    
+    def index2tiangan(self, index):
+        '''用位置编号查询地盘九宫中对应位置天干'''
+        return self.dipan[index]
+    
+    def tiangan2index(self, tiangan):
+        '''用天干查询在地盘九宫中的位置编号'''
+        return self.dipan.index(tiangan)
+    
+    def get_jiugong_wuxing(self, tiangan):
+        '''由九宫所在位置得到九宫五行'''
+        index = self.tiangan2index(tiangan)
+        if index in [1, 4, 7]:
+            return '土'
+        elif index in [8]:
+            return '火'
+        elif index in [0]:
+            return '水'
+        elif index in [5, 6]:
+            return '金'
+        elif index in [2, 3]:
+            return '木'
+    

@@ -2,14 +2,8 @@ import math
 
 import ephem
 
-tiangan = '甲、乙、丙、丁、戊、己、庚、辛、壬、癸'.split('、')
-dizhi = '子、丑、寅、卯、辰、巳、午、未、申、酉、戌、亥'.split('、')
-nlrq = '初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十'.split(' ')
-yuefen = '正月 二月 三月 四月 五月 六月 七月 八月 九月 十月 十一月 十二月'.split(' ')
-gz = []
+from konstant import gz, yuefen
 
-for i in range(60):
-    gz.append(f'{tiangan[i % 10]}{dizhi[i % 12]}')
 
 def julian_date_2_date(julian_date, ut=8):
     return ephem.Date(julian_date + ut / 24 - 2415020)
