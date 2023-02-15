@@ -2,7 +2,7 @@ from skyfield import almanac
 from skyfield import almanac_east_asia as almanac_ea
 from skyfield import api
 
-from konstant import dipan_tiangan, yangjieqi, yinjieqi
+from konstant import dipan_tiangan, jiuxingzhudi, yangjieqi, yinjieqi
 
 
 def sanyuan(gz):
@@ -41,15 +41,15 @@ def wuxing_sheng_ke(zhu, ke):
     index_ke = wuxing.index(ke)
     shengke = index_zhu - index_ke
     if shengke == 0:
-        return '旺'
+        return '旺(大吉)'
     elif shengke == -1 or shengke == 4:
-        return '相'
+        return '相(小吉)'
     elif shengke == -2 or shengke == 3:
-        return '休'
+        return '休(小凶)'
     elif shengke == -3 or shengke == 2:
-        return '囚'
+        return '囚(小凶)'
     elif shengke == -4 or shengke == 1:
-        return '死'
+        return '死(大凶)'
 
 def yinyangju(last_jieqi):
     '''根据上一个节气判断是阳局还是阴局'''
@@ -93,6 +93,7 @@ class Dipan:
     def __str__(self):
         '''显示地盘九宫'''
         return f'''     
+        地盘九宫
         {self.dipan[3]} {self.dipan[8]} {self.dipan[1]}
         {self.dipan[2]} {self.dipan[4]} {self.dipan[6]}
         {self.dipan[7]} {self.dipan[0]} {self.dipan[5]}
@@ -119,4 +120,47 @@ class Dipan:
             return '金'
         elif index in [2, 3]:
             return '木'
+    
+    def get_jiuxing_zhudi(self, tiangan):
+        '''查询天干对应位置的九星驻地'''
+        index = self.tiangan2index(tiangan)
+        jgzd = jiuxingzhudi[index]
+        return jgzd
+
+class Jiuxing:
+    
+    def __init__(self, zhifujiuxing, shiganzhi, dipan):
+        self.zhifujiuxing = zhifujiuxing
+        self.shiganzhi = shiganzhi
+        self.dipan = dipan
+        self._make()
+        
+    def _make(self):
+        self.jiuxing = [1] * 9
+        self.jiuxing[4] = '禽'
+        jiuxingshunxu = '蓬 任 冲 辅 英 芮 柱 心'.split(' ')
+        jiugongshunxu = [0, 7, 2, 3, 8, 1, 6, 5]
+        shiganjiugong = self.dipan.tiangan2index(self.shiganzhi[0])
+        a = jiugongshunxu.index(shiganjiugong)
+        new_jiugongshunxu = jiugongshunxu[a:] + jiugongshunxu[:a]
+        b = jiuxingshunxu.index(self.zhifujiuxing)
+        new_jiuxingshunxu = jiuxingshunxu[b:] + jiuxingshunxu[:b]
+        for i in range(8):
+            self.jiuxing[new_jiugongshunxu[i]] = new_jiuxingshunxu[i]
+    
+    def __str__(self):
+        '''显示九星九宫'''
+        return f'''     
+        九星九宫
+        {self.jiuxing[3]} {self.jiuxing[8]} {self.jiuxing[1]}
+        {self.jiuxing[2]} {self.jiuxing[4]} {self.jiuxing[6]}
+        {self.jiuxing[7]} {self.jiuxing[0]} {self.jiuxing[5]}
+        '''
+    
+    def index2jiuxing(self, index):
+        return self.jiuxing[index]
+    
+    def jiuxing2index(self, jx):
+        return self.jiuxing.index(jx)
+    
     

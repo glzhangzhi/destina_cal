@@ -208,7 +208,7 @@ def shi_gan_zhi(t, rigan):
     
     return shiganzhi
 
-def gan_zhi(t):
+def calculate_gan_zhi(t):
     '''计算年月日时的干支以及阴历月份'''
     t1, t2 = t.split(' ')
     ngz, ygz, rgz, yly = solar_2_lunar_calendar(t1)

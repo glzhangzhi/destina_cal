@@ -1,14 +1,14 @@
 
-from test import Dipan, get_last_jieqi, sanyuan, wuxing_sheng_ke, yinyangju
+from test import Dipan, get_last_jieqi, Jiuxing, sanyuan, wuxing_sheng_ke, yinyangju
 
-from date_utils import gan_zhi
-from konstant import dipan_tiangan, jushu, tiangan2wuxing, yuefen2wuxing, jiuxingzhudi
+from date_utils import calculate_gan_zhi
+from konstant import dipan_tiangan, jiaxun, jushu, tiangan2wuxing, yuefen2wuxing, jiuxingzhudi, gz
 
 # 输入日期和时间
 date = '2023-2-13 20:59'
 
 # 计算年月日时干支和阴历月份
-ngz, ygz, rgz, sgz, yly = gan_zhi(date)
+ngz, ygz, rgz, sgz, yly = calculate_gan_zhi(date)
 print(f'{ngz}年{ygz}月{rgz}日{sgz} 阴历{yly}')
 
 # 判断上中下元
@@ -43,14 +43,33 @@ print('月份五行', ywuxing)
 jiugongwuxing = dipan.get_jiugong_wuxing(rg)
 print('地盘五行', jiugongwuxing)
 
+# 计算日干五行和阴历月份五行的生克关系
 print(f'日月凶吉: {wuxing_sheng_ke(rgwuxing, ywuxing)}')
 
+# 计算日干五行和日干所在地盘九宫位置五行的生克关系
 print(f'地盘凶吉: {wuxing_sheng_ke(rgwuxing, jiugongwuxing)}')
 
-riganjiuxing = jiuxingzhudi[dipan.index(rg)]
-riganjiuxing
+# 查询日干对应的九星驻地
+riganjiuxing = dipan.get_jiuxing_zhudi(rg)
+print('日干对应的九星驻地', riganjiuxing)
 
+# 计算时干支对应的甲旬
+jx = jiaxun[int(gz.index(sgz) / 10)]
+print('时干支对应的甲旬为', jx)
 
+# 确定值符
+zhifu = jx[2]
+print('值符为', zhifu)
+# 确定值符所在的九宫位置编号
+zhifujiugong = dipan.tiangan2index(zhifu)
+# 如果值符位于中宫，则看坤二宫
+if zhifujiugong == 4:
+    zhifujiugong = 1
+# 由值符九宫位置确定值符九星
+zhifujiuxing = jiuxingzhudi[zhifujiugong]
+print('值符所在九宫对应的九星', zhifujiuxing)
 
-
+# 排九星盘
+jiuxing = Jiuxing(zhifujiuxing, sgz, dipan)
+print(jiuxing)
 
