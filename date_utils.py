@@ -7,6 +7,7 @@ dizhi = '子、丑、寅、卯、辰、巳、午、未、申、酉、戌、亥'.
 nlrq = '初一 初二 初三 初四 初五 初六 初七 初八 初九 初十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 廿一 廿二 廿三 廿四 廿五 廿六 廿七 廿八 廿九 三十'.split(' ')
 yuefen = '正月 二月 三月 四月 五月 六月 七月 八月 九月 十月 十一月 十二月'.split(' ')
 gz = []
+
 for i in range(60):
     gz.append(f'{tiangan[i % 10]}{dizhi[i % 12]}')
 
@@ -131,28 +132,32 @@ def solar_terms(year, angle):
     return jd1
     
 def solar_2_lunar_calendar(date):
-    
+    '''公历日期计算年月日干支及阴历月'''
+    # 公历年份不可能为0
     if date[0] == '0':
         raise ValueError
     
     julian_date = ephem.julian_date(date) - 8 / 24
     year, month, day = julian_date_2_date(julian_date, 8).triple()
     
-    dzs = find_dzs(year)
-    next_dzs = find_dzs(year + 1)
+    dzs = find_dzs(year)  # 本年冬至朔
+    next_dzs = find_dzs(year + 1)  # 次年冬至朔
     
+    # 两次冬至朔的儒略日
     this_dzs_jd = ephem.julian_date(dzs)
     next_dzs_jd = ephem.julian_date(next_dzs)
     
-    nian = year
+    nian = year  # 先设农历年在本年
     if date_compare(julian_date, next_dzs_jd):
-        nian += 1
+        nian += 1  # 该日在次年
     if not date_compare(julian_date, this_dzs_jd):
-        nian -= 1
+        nian -= 1  # 该日在上年
     
+    # 判断所在月
     ymb, shuojd = lunar_calendar(nian)
     szy = find_szy(julian_date, shuojd)
     
+    # 判断节气月
     if year < 0:
         year += 1
     
@@ -166,6 +171,8 @@ def solar_2_lunar_calendar(date):
     else:
         ygz = gz[(year * 12 + 11 + month) % 60]
     
+    # 以正月开始的年干支
+    # 正月前属上年
     # if szy < 3:
     #     nian -= 1
     
@@ -176,6 +183,7 @@ def solar_2_lunar_calendar(date):
     
     rgz = gz[math.floor(julian_date + 8 / 24 + 0.5 + 49) % 60]
     
+    # 月内日期
     rq = date_differ(julian_date, shuojd[szy])
     
     # print(f'{date} 为农历 {ngz}年{ygz}月{rgz}日 {ymb[szy]}{nlrq[rq]}')
@@ -184,6 +192,7 @@ def solar_2_lunar_calendar(date):
 
 
 def shi_gan_zhi(t, rigan):
+    '''计算时干支'''
     shi, fen = t.split(':')
     shi = int(shi)
     shi = int(shi / 2 + 0.5) % 12
@@ -206,6 +215,7 @@ def shi_gan_zhi(t, rigan):
     return shiganzhi
 
 def gan_zhi(t):
+    '''计算年月日时的干支以及阴历月份'''
     t1, t2 = t.split(' ')
     ngz, ygz, rgz, yly = solar_2_lunar_calendar(t1)
     sgz = shi_gan_zhi(t2, rgz[0])
