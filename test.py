@@ -2,7 +2,7 @@ from skyfield import almanac
 from skyfield import almanac_east_asia as almanac_ea
 from skyfield import api
 
-from konstant import dipan_tiangan, bashen, jiuxingzhudi, yangjieqi, yinjieqi
+from konstant import bashen, dipan_tiangan, jiuxingzhudi, yangjieqi, yinjieqi
 
 
 def sanyuan(gz):

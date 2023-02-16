@@ -1,8 +1,16 @@
 
-from test import Dipan, Bashen, get_last_jieqi, Jiuxing, sanyuan, wuxing_sheng_ke, yinyangju
+from test import (
+    Bashen,
+    Dipan,
+    Jiuxing,
+    get_last_jieqi,
+    sanyuan,
+    wuxing_sheng_ke,
+    yinyangju,
+)
 
 from date_utils import calculate_gan_zhi
-from konstant import dipan_tiangan, jiaxun, bashen, jushu, tiangan2wuxing, yuefen2wuxing, jiuxingzhudi, gz
+from konstant import gz, jiaxun, jiuxingzhudi, jushu, tiangan2wuxing, yuefen2wuxing
 
 # 输入日期和时间
 date = '2023-2-13 20:59'
