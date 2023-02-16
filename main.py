@@ -10,7 +10,7 @@ from test import (
 )
 
 from date_utils import calculate_gan_zhi
-from konstant import gz, jiaxun, jiuxing2wuxing, jiuxingzhudi, jushu, tiangan2wuxing, yuefen2wuxing
+from konstant import gz, jiaxun, bashen2wuxing, jiuxing2wuxing, jiuxingzhudi, jushu, tiangan2wuxing, yuefen2wuxing
 
 # 输入日期和时间
 date = '2023-2-13 20:59'
@@ -93,6 +93,7 @@ print('#########################')
 bs = Bashen(zhifujiugong, ju)
 print(bs)
 riganbashen = bs.index2bashen(riganjiugong)
-
+riganbashenwuxing = bashen2wuxing[riganbashen]
+print('日干八神与日干的凶吉', wuxing_sheng_ke(riganbashenwuxing, rgwuxing))
 print('#########################')
 
