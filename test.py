@@ -192,3 +192,9 @@ class Bashen:
         {self.bashen[2]} {self.bashen[4]} {self.bashen[6]}
         {self.bashen[7]} {self.bashen[0]} {self.bashen[5]}
         '''
+        
+    def index2bashen(self, index):
+        return self.bashen[index]
+    
+    def bashen2index(self, jx):
+        return self.bashen.index(jx)

@@ -10,7 +10,7 @@ from test import (
 )
 
 from date_utils import calculate_gan_zhi
-from konstant import gz, jiaxun, jiuxingzhudi, jushu, tiangan2wuxing, yuefen2wuxing
+from konstant import gz, jiaxun, jiuxing2wuxing, jiuxingzhudi, jushu, tiangan2wuxing, yuefen2wuxing
 
 # 输入日期和时间
 date = '2023-2-13 20:59'
@@ -60,8 +60,8 @@ print(f'地盘凶吉: {wuxing_sheng_ke(rgwuxing, jiugongwuxing)}')
 print('#########################')
 
 # 查询日干对应的九星驻地
-riganjiuxing = dipan.get_jiuxing_zhudi(rg)
-print('日干对应的九星驻地', riganjiuxing)
+riganjiuxingzhudi = dipan.get_jiuxing_zhudi(rg)
+print('日干对应的九星驻地', riganjiuxingzhudi)
 
 # 计算时干支对应的甲旬
 jx = jiaxun[int(gz.index(sgz) / 10)]
@@ -82,12 +82,17 @@ print('值符所在九宫对应的九星', zhifujiuxing)
 # 排九星盘
 jiuxing = Jiuxing(zhifujiuxing, sgz, dipan)
 print(jiuxing)
-
+riganjiugong = dipan.tiangan2index(rgz[0])
+riganjiuxing = jiuxing.index2jiuxing(riganjiugong)
+riganjiuxingwuxing = jiuxing2wuxing[riganjiuxing]
+print('日干九星五行为', riganjiuxingwuxing)
+print('日干九星与日干的凶吉', wuxing_sheng_ke(riganjiuxingwuxing, rgwuxing))
 print('#########################')
 
 # 开始排八神盘
 bs = Bashen(zhifujiugong, ju)
 print(bs)
+riganbashen = bs.index2bashen(riganjiugong)
 
 print('#########################')
 
